@@ -1,4 +1,4 @@
-#这里主要是C#代码 ，通过.net8  mini api 构建一个简单http get请求
+#这里主要是C#代码 ，通过.net8  mini api 构建一个简单http get请求llama的atom大模型，你自己去申请key ,替换下Program.cs里面的key即可运行看到效果。
 
 ##访问是： http://localhost:5069/llama，会返回：你好，欢迎来到llama大模型对话
 
