@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人工智能---江湖评谈</title>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        /* 添加背景图片 */
+        background-image: url('background-image.jpg');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .chat-container {
+        width: 90%; /* 修改对话框宽度 */
+        max-width: 1000px; /* 修改最大宽度 */
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .chat-header {
+        background-color: #4c5daf;
+        color: white;
+        padding: 16px;
+        text-align: center;
+        font-size: 20px;
+    }
+    .chat-messages {
+        height: 500px; /* 修改对话框高度 */
+        padding: 16px;
+        overflow-y: auto;
+    }
+    .message {
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+    .user-message {
+        background-color: #DCF8C6;
+        border-radius: 10px;
+        padding: 8px 16px;
+        float: right;
+        clear: both;
+        max-width: 70%;
+        word-wrap: break-word;
+        position: relative;
+    }
+    .ai-message {
+        background-color: #E0E0E0;
+        border-radius: 10px;
+        padding: 8px 16px;
+        float: left;
+        clear: both;
+        max-width: 70%;
+        word-wrap: break-word;
+        position: relative;
+    }
+   
+    .user-message::after,
+.ai-message::before {
+    content: "";
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.user-message::after {
+    background-image: url('user.png'); /* 用户图片路径 */
+}
+
+.ai-message::before {
+    background-image: url('ai.png'); /* AI图片路径 */
+}
+
+
+    .input-container {
+        padding: 16px;
+        display: flex;
+    }
+    .input-field {
+        flex-grow: 1;
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        margin-right: 10px;
+    }
+    .send-btn {
+        background-color: #af4c4c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        padding: 8px 16px;
+    }
+</style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">AI智能---江湖评谈</div>
+    <div class="chat-messages" id="chat-messages">
+        <!-- 这里动态插入消息内容 -->
+        <div class="ai-message">欢迎！有什么可以帮助您的吗？</div>
+    </div>
+    <div class="input-container">
+        <input type="text" class="input-field" id="user-input" placeholder="请输入您的问题...">
+        <button class="send-btn" id="send-button">发送</button>
+    </div>
+</div>
+
+<script>
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+
+    function appendMessage(sender, message) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        if (sender === 'User') {
+            messageElement.classList.add('user-message');
+        } else {
+            messageElement.classList.add('ai-message');
+        }
+        messageElement.textContent = message;
+        chatMessages.appendChild(messageElement);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    sendButton.addEventListener('click', () => {
+        const userMessage = userInput.value.trim();
+        if (userMessage !== '') {
+            appendMessage('User', userMessage);
+            userInput.value = '';
+            let message='抱歉，我目前还在学习中，无法提供准确的答复。';
+
+
+            // 要发送的数据
+            const postData = {
+    "model": "Atom-7B-Chat",
+    "messages": [{
+        "role": "user",
+        "content": userMessage
+    }],
+    "temperature": 0.3,
+    "stream": true
+};
+
+            // 构建请求头
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer sk-00d4841ba02fc0484cf286d2ff39d824' // 示例令牌
+            };
+
+            // 发送 POST 请求
+            fetch('https://api.atomecho.cn/v1/chat/completions', {
+                method: 'POST',
+                headers: headers, // 设置请求头
+                body: JSON.stringify(postData) // 将数据转换为 JSON 字符串并发送
+            })
+            .then(response => response.text()) // 解析 JSON 响应
+            .then(data => {
+
+    let str = data;
+    //message = str.match(/[\u4e00-\u9fa5]+/g);中文输出正则匹配，其它会出错
+
+    let fruits = str.split("content");
+    message='';
+    for (let i = 0; i < fruits.length; i++) 
+    {
+       let regex = /":"(.*?)"}}],/;
+       let match = regex.exec(fruits[i]);
+       if (match && match[1]) {
+          let extractedContent = match[1];
+          //alert(extractedContent);
+          message= message.concat(extractedContent); 
+         } 
+      else {
+           console.log("No match found.");
+             }
+
+   }
+   
+let cleanedString = message
+    .replace(/\\\"/g, '\"')  // 去掉转义的双引号
+    .replace(/\\n/g, ' ')    // 去掉转义的换行符并替换为空格
+    .replace(/\\r/g, ' ')    // 去掉转义的回车符并替换为空格
+    .replace(/\\t/g, ' ')    // 去掉转义的制表符并替换为空格
+    .replace(/```/g, '')     // 去掉反引号
+    .replace(/\\/g, '')      // 去掉所有剩余的反斜杠
+    .replace(/\n/g, ' ')     // 去掉实际的换行符并替换为空格
+    .replace(/\r/g, ' ');    // 去掉实际的回车符并替换为空格
+
+    // 模拟 AI 的回复（可以根据实际情况修改）
+            setTimeout(() => {
+                appendMessage('AI', cleanedString);
+            }, 500);
+                //console.log('POST 请求结果:', message); // 输出获取到的数据
+                //alert('POST 请求成功，结果见控制台！');
+            })
+            .catch(error => {
+                console.error('POST 请求错误:', error); // 处理错误
+                alert('POST 请求出错，请查看控制台！');
+            });          
+        }
+    });
+
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendButton.click();
+        }
+    });
+</script>
+
+</body>
+</html>

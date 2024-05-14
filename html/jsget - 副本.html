@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单的 JavaScript POST 请求示例</title>
+</head>
+<body>
+    <button id="postButton">发送 POST 请求</button>
+    <script>
+        document.getElementById('postButton').addEventListener('click', function() {
+            // 要发送的数据
+            const postData = {
+    "model": "Atom-7B-Chat",
+    "messages": [{
+        "role": "user",
+        "content": "介绍一下Llama社区"
+    }],
+    "temperature": 0.3,
+    "stream": true
+};
+
+            // 构建请求头
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer sk-00d4841ba02fc0484cf286d2ff39d824' // 示例令牌
+            };
+
+            // 发送 POST 请求
+            fetch('https://api.atomecho.cn/v1/chat/completions', {
+                method: 'POST',
+                headers: headers, // 设置请求头
+                body: JSON.stringify(postData) // 将数据转换为 JSON 字符串并发送
+            })
+            .then(response => response.text()) // 解析 JSON 响应
+            .then(data => {
+
+
+     let str = data;
+     let chineseWords = str.match(/[\u4e00-\u9fa5]+/g);
+
+                console.log('POST 请求结果:', chineseWords); // 输出获取到的数据
+                alert('POST 请求成功，结果见控制台！');
+            })
+            .catch(error => {
+                console.error('POST 请求错误:', error); // 处理错误
+                alert('POST 请求出错，请查看控制台！');
+            });
+        });
+    </script>
+</body>
+</html>
