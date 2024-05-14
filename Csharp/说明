@@ -1,5 +1,5 @@
-# 这里主要是C#代码 ，通过.net8  mini api 构建一个简单http get请求
+#这里主要是C#代码 ，通过.net8  mini api 构建一个简单http get请求
 
-## 访问是： http://localhost:5069/llama，会返回：你好，欢迎来到llama大模型对话
+##访问是： http://localhost:5069/llama，会返回：你好，欢迎来到llama大模型对话
 
-## 可以通过传参的形式，让大模型返回，比如想要知道美国文化: http://localhost:5069/llama/美国文化 即可请求
+##可以通过传参的形式，让大模型返回，比如想要知道美国文化: http://localhost:5069/llama/美国文化 即可请求
