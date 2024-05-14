@@ -2,9 +2,8 @@ from openai import OpenAI
 import sys
 
 def ABC(str):
-      client = OpenAI(api_key="sk-your atome api key",base_url="https://api.atomecho.cn/v1",)
+      client = OpenAI(api_key="sk-your atom key",base_url="https://api.atomecho.cn/v1",)
       completion = client.chat.completions.create(model="Llama3-Chinese-8B-Instruct",messages=[{"role":"user", "content": str}],temperature=0.3,)
-      print(completion.content)
       print(completion.choices[0].message.content)
       return
 
