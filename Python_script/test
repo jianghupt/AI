@@ -2,4 +2,6 @@
 
 分别为百度的yi-34b的python大模型API调用脚本以及llama的脚本
 
+要运行可直接 python test_yi.py即可，或者可以打包成exe：pyinstaller -F test.yi.py
+
 
