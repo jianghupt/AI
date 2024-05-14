@@ -13,7 +13,7 @@ namespace Web_AOT
         {
             var client = new RestClient("https://api.atomecho.cn/v1/chat/completions");
             var request = new RestRequest("https://api.atomecho.cn/v1/chat/completions", Method.Post);
-            request.AddHeader("Authorization", "Bearer sk-00d4841ba02fc0484cf286d2ff39d824");
+            request.AddHeader("Authorization", "Bearer your atom key");
             request.AddHeader("Content-Type", "application/json");
             request.AddHeader("Accept", "*/*");
             request.AddHeader("Host", "api.atomecho.cn");
