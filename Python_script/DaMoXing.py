@@ -8,7 +8,6 @@ from torch import nn
 from matplotlib import pyplot
 
 class MyModel(nn.Module):
-    """根据码农条件预测工资的模型"""
     def __init__(self):
         super().__init__()
         self.layer1 = nn.Linear(in_features=8, out_features=200)
